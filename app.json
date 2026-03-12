@@ -37,6 +37,13 @@
           "imageWidth": 200,
           "resizeMode": "contain"
         }
+      ],
+      [
+        "expo-location",
+        {
+          "isAndroidBackgroundLocationEnabled": false,
+          "locationAlwaysPermission": "Allow RepCheck to use your location even in the background."
+        }
       ]
     ],
     "scheme": "repcheck",

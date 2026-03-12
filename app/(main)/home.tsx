@@ -1,8 +1,9 @@
 import { ScreenWrapper } from '@/core/components/screen-wrapper';
 import { useAuthStore } from '@/features/auth/store/auth-store';
+import { useLocation } from '@/features/location/hooks/use-location';
 import { useTheme } from '@/features/theme/hooks/use-theme';
 import { Ionicons } from '@expo/vector-icons';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Pressable,
@@ -18,6 +19,11 @@ export default function HomeScreen() {
   const logout = useAuthStore((s) => s.logout);
 
   const { colors, isDark, toggleMode } = useTheme();
+  const { coords, address, requestLocation } = useLocation();
+
+  useEffect(() => {
+    requestLocation();
+  }, []);
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -66,25 +72,42 @@ export default function HomeScreen() {
             style={[
               styles.statsCard,
               {
-                backgroundColor: colors.surface,
+                backgroundColor: colors.surfaceSecondary,
                 borderColor: colors.borderSubtle,
-                shadowColor: colors.glow,
               },
             ]}
           >
-            <Text style={[styles.cardTitle, { color: colors.textPrimary }]}>
-              System Status
-            </Text>
-            <View
-              style={[
-                styles.statusBadge,
-                { backgroundColor: colors.accentSoft },
-              ]}
-            >
-              <View style={[styles.dot, { backgroundColor: colors.accent }]} />
-              <Text style={[styles.statusText, { color: colors.accent }]}>
-                Secure & Connected
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Ionicons name="location" size={20} color={colors.accent} />
+
+              <Text
+                style={[
+                  styles.cardTitle,
+                  {
+                    color: colors.textPrimary,
+                    marginLeft: 10,
+                  },
+                ]}
+              >
+                Current Location
               </Text>
+            </View>
+
+            <View style={{ marginTop: 12 }}>
+              {!coords ? (
+                <Text style={{ color: colors.warning, fontSize: 14 }}>
+                  Unable to Detect Location
+                </Text>
+              ) : (
+                <>
+                  <Text style={[{ color: colors.textPrimary }]}>
+                    {address?.city ?? 'Detecting...'}
+                  </Text>
+                  <Text style={[{ color: colors.textSecondary }]}>
+                    {address?.region}, {address?.country}
+                  </Text>
+                </>
+              )}
             </View>
           </View>
         </View>
@@ -160,11 +183,20 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.15,
     shadowRadius: 15,
     elevation: 4,
+    marginBottom: 20,
+  },
+  locationCard: {
+    padding: 12,
+    borderRadius: 24,
+    borderWidth: 1,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.15,
+    shadowRadius: 15,
+    elevation: 4,
   },
   cardTitle: {
     fontSize: 18,
     fontWeight: '700',
-    marginBottom: 16,
   },
   statusBadge: {
     flexDirection: 'row',

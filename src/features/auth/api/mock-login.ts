@@ -6,8 +6,8 @@ export const mockLoginApi = async (data: LoginFormData) => {
 
   if (data.email === 'admin@test.com' && data.password === 'password123') {
     return {
-      user: { email: data.email, name: 'Senior Dev' },
-      token: 'mock_jwt_token_2026',
+      user: { email: data.email, name: 'Phey Ying' },
+      token: 'mock_jwt_token_2026', // Mock - Sensitive data is suppose to store in 'expo-secure-store'.
     };
   }
 
