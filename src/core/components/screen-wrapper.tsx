@@ -22,11 +22,10 @@ export const ScreenWrapper = ({
   withKeyboard = true,
   paddingTop = true,
   paddingBottom = true,
-  backgroundColor = '#000', // Default to your app's theme
+  backgroundColor = '#000',
 }: Props) => {
   const insets = useSafeAreaInsets();
 
-  // We apply insets as padding to the outer container
   const containerStyle = [
     styles.container,
     {

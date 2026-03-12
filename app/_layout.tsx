@@ -1,4 +1,4 @@
-import { useAuthStore } from '@/features/auth/store/use-auth-store';
+import { useAuthStore } from '@/features/auth/store/auth-store';
 import { Slot, useRootNavigationState, useSegments } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';

@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'expo-router';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import {
@@ -16,11 +15,13 @@ import {
   LoginFormData,
   loginSchema,
 } from '@/features/auth/schemas/login-schema';
-import { useAuthStore } from '@/features/auth/store/use-auth-store';
+import { useAuthStore } from '@/features/auth/store/auth-store';
+import { useTheme } from '@/features/theme/hooks/use-theme';
 
 export const LoginForm = () => {
   const login = useAuthStore((s) => s.login);
-  const router = useRouter();
+
+  const { colors, isDark } = useTheme();
 
   const {
     control,
@@ -37,25 +38,33 @@ export const LoginForm = () => {
   const onLogin = async (data: LoginFormData) => {
     try {
       await login(data);
-
-      router.replace('/(main)/home');
     } catch (err: any) {
       Alert.alert('Login Failed', err.message || 'Something went wrong');
     }
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>Email</Text>
+        <Text style={[styles.label, { color: colors.textSecondary }]}>
+          Email
+        </Text>
         <Controller
           control={control}
           name="email"
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
               placeholder="admin@test.com"
-              placeholderTextColor="#666"
-              style={[styles.input, errors.email && styles.inputError]}
+              placeholderTextColor={isDark ? '#666' : '#999'}
+              style={[
+                styles.input,
+                {
+                  backgroundColor: colors.surface,
+                  color: colors.textPrimary,
+                  borderColor: colors.borderSubtle,
+                },
+                errors.email && { borderColor: colors.warning },
+              ]}
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
@@ -66,21 +75,33 @@ export const LoginForm = () => {
           )}
         />
         {errors.email && (
-          <Text style={styles.errorText}>{errors.email.message}</Text>
+          <Text style={[styles.errorText, { color: colors.warning }]}>
+            {errors.email.message}
+          </Text>
         )}
       </View>
 
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>Password</Text>
+        <Text style={[styles.label, { color: colors.textSecondary }]}>
+          Password
+        </Text>
         <Controller
           control={control}
           name="password"
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
               placeholder="••••••••"
-              placeholderTextColor="#666"
+              placeholderTextColor={isDark ? '#666' : '#999'}
               secureTextEntry
-              style={[styles.input, errors.password && styles.inputError]}
+              style={[
+                styles.input,
+                {
+                  backgroundColor: colors.surface,
+                  color: colors.textPrimary,
+                  borderColor: colors.borderSubtle,
+                },
+                errors.password && { borderColor: colors.warning },
+              ]}
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
@@ -88,7 +109,9 @@ export const LoginForm = () => {
           )}
         />
         {errors.password && (
-          <Text style={styles.errorText}>{errors.password.message}</Text>
+          <Text style={[styles.errorText, { color: colors.warning }]}>
+            {errors.password.message}
+          </Text>
         )}
       </View>
 
@@ -97,13 +120,24 @@ export const LoginForm = () => {
         disabled={isSubmitting}
         style={({ pressed }) => [
           styles.button,
-          (pressed || isSubmitting) && styles.buttonPressed,
+          { backgroundColor: colors.accent },
+          (pressed || isSubmitting) && {
+            opacity: 0.8,
+            backgroundColor: colors.glow,
+          },
         ]}
       >
         {isSubmitting ? (
-          <ActivityIndicator color="#000" />
+          <ActivityIndicator color={isDark ? '#000' : '#fff'} />
         ) : (
-          <Text style={styles.buttonText}>Sign In</Text>
+          <Text
+            style={[
+              styles.buttonText,
+              { color: isDark ? colors.background : '#fff' },
+            ]}
+          >
+            Sign In
+          </Text>
         )}
       </Pressable>
     </View>
@@ -111,50 +145,37 @@ export const LoginForm = () => {
 };
 
 const styles = StyleSheet.create({
-  flex: { flex: 1 },
   container: {
-    flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 24,
     gap: 20,
   },
   inputContainer: { gap: 8 },
   label: {
-    color: '#ccc',
     fontSize: 14,
     fontWeight: '600',
     marginLeft: 4,
   },
   input: {
-    backgroundColor: '#111',
-    color: '#fff',
     padding: 16,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#222',
     fontSize: 16,
   },
-  inputError: {
-    borderColor: '#ff4b4b',
-  },
   errorText: {
-    color: '#ff4b4b',
     fontSize: 12,
     marginLeft: 4,
   },
   button: {
-    backgroundColor: '#fff',
     padding: 18,
     borderRadius: 12,
     alignItems: 'center',
     marginTop: 10,
-  },
-  buttonPressed: {
-    opacity: 0.8,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
   },
   buttonText: {
     fontWeight: '700',
     fontSize: 16,
-    color: '#000',
   },
 });
