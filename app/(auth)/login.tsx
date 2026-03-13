@@ -1,5 +1,5 @@
 import { ScreenWrapper } from '@/core/components/screen-wrapper';
-import { LoginForm } from '@/features/auth/ui/login-form';
+import { LoginForm } from '@/features/auth/components/login-form';
 import { useTheme } from '@/features/theme/hooks/use-theme';
 import { StyleSheet, Text, View } from 'react-native';
 

@@ -10,8 +10,9 @@ export default function MainLayout() {
     <Stack
       screenOptions={{
         headerShown: false,
-        animation: 'fade',
       }}
-    />
+    >
+      <Stack.Screen name="home" />
+    </Stack>
   );
 }

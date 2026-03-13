@@ -54,7 +54,7 @@ export const LoginForm = () => {
           name="email"
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
-              placeholder="admin@test.com"
+              placeholder="py@test.com"
               placeholderTextColor={isDark ? '#666' : '#999'}
               style={[
                 styles.input,

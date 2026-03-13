@@ -1,17 +1,24 @@
-import { useAuthStore } from '@/features/auth/store/auth-store';
-import { Slot, useRootNavigationState, useSegments } from 'expo-router';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { Slot, useRootNavigationState } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { useAppStateFocus } from '@/core/hooks/use-app-state-focus';
+import { useOnlineManager } from '@/core/hooks/use-online-manager';
+import { queryClient } from '@/core/lib/react-query';
+import { useAuthStore } from '@/features/auth/store/auth-store';
+
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  useOnlineManager();
+  useAppStateFocus();
+
   const hasHydrated = useAuthStore.persist.hasHydrated();
   const navigationState = useRootNavigationState();
-  const segments = useSegments();
 
   useEffect(() => {
     if (hasHydrated && navigationState?.key) {
@@ -28,15 +35,13 @@ export default function RootLayout() {
 
   return (
     <SafeAreaProvider>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <Animated.View
-          key={segments[0]}
-          entering={FadeIn.duration(400)}
-          style={{ flex: 1 }}
-        >
-          <Slot />
-        </Animated.View>
-      </GestureHandlerRootView>
+      <QueryClientProvider client={queryClient}>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <Animated.View entering={FadeIn.duration(400)} style={{ flex: 1 }}>
+            <Slot />
+          </Animated.View>
+        </GestureHandlerRootView>
+      </QueryClientProvider>
     </SafeAreaProvider>
   );
 }

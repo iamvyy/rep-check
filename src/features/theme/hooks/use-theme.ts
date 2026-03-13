@@ -1,6 +1,6 @@
 import { themes } from '@/features/theme/color';
 import { useThemeStore } from '@/features/theme/store/theme-store';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useColorScheme } from 'react-native';
 
 export const useTheme = () => {
@@ -13,11 +13,16 @@ export const useTheme = () => {
 
   const colors = useMemo(() => themes[resolvedMode], [resolvedMode]);
 
+  const toggleMode = useCallback(
+    () => setMode(resolvedMode === 'dark' ? 'light' : 'dark'),
+    [setMode, resolvedMode]
+  );
+
   return {
     mode,
     colors,
     isDark: resolvedMode === 'dark',
     setMode,
-    toggleMode: () => setMode(resolvedMode === 'dark' ? 'light' : 'dark'),
+    toggleMode,
   };
 };

@@ -1,36 +1,34 @@
-import { ScreenWrapper } from '@/core/components/screen-wrapper';
-import { useAuthStore } from '@/features/auth/store/auth-store';
-import { useLocation } from '@/features/location/hooks/use-location';
-import { useTheme } from '@/features/theme/hooks/use-theme';
 import { Ionicons } from '@expo/vector-icons';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   ActivityIndicator,
+  Alert,
   Pressable,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
 
+import { ScreenWrapper } from '@/core/components/screen-wrapper';
+import { useAuthStore } from '@/features/auth/store/auth-store';
+import { useLocation } from '@/features/location/hooks/use-location';
+import { useTheme } from '@/features/theme/hooks/use-theme';
+
 export default function HomeScreen() {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
+  const { coords, address, loading: locationLoading } = useLocation();
+  const { colors, isDark, toggleMode } = useTheme();
+
   const user = useAuthStore((s) => s.user);
   const logout = useAuthStore((s) => s.logout);
-
-  const { colors, isDark, toggleMode } = useTheme();
-  const { coords, address, requestLocation } = useLocation();
-
-  useEffect(() => {
-    requestLocation();
-  }, []);
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
       await logout();
     } catch (_) {
-      alert('Logout failed');
+      Alert.alert('Logout Failed', 'Please try again later.');
     } finally {
       setIsLoggingOut(false);
     }
@@ -77,34 +75,32 @@ export default function HomeScreen() {
               },
             ]}
           >
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View style={styles.cardHeader}>
               <Ionicons name="location" size={20} color={colors.accent} />
-
-              <Text
-                style={[
-                  styles.cardTitle,
-                  {
-                    color: colors.textPrimary,
-                    marginLeft: 10,
-                  },
-                ]}
-              >
+              <Text style={[styles.cardTitle, { color: colors.textPrimary }]}>
                 Current Location
               </Text>
             </View>
 
-            <View style={{ marginTop: 12 }}>
-              {!coords ? (
+            <View style={styles.locationBody}>
+              {locationLoading ? (
+                <ActivityIndicator size="small" color={colors.accent} />
+              ) : !coords ? (
                 <Text style={{ color: colors.warning, fontSize: 14 }}>
                   Unable to Detect Location
                 </Text>
               ) : (
                 <>
-                  <Text style={[{ color: colors.textPrimary }]}>
-                    {address?.city ?? 'Detecting...'}
+                  <Text
+                    style={[styles.cityText, { color: colors.textPrimary }]}
+                  >
+                    {address?.city ?? 'Detecting Location...'}
                   </Text>
-                  <Text style={[{ color: colors.textSecondary }]}>
-                    {address?.region}, {address?.country}
+                  <Text
+                    style={[styles.regionText, { color: colors.textSecondary }]}
+                  >
+                    {address?.region ? `${address.region}, ` : ''}
+                    {address?.country ?? 'Global'}
                   </Text>
                 </>
               )}
@@ -119,7 +115,7 @@ export default function HomeScreen() {
             style={({ pressed }) => [
               styles.logoutButton,
               { borderColor: colors.warning },
-              pressed && { backgroundColor: colors.warning + '15' },
+              pressed && { backgroundColor: `${colors.warning}15` },
             ]}
           >
             {isLoggingOut ? (
@@ -185,36 +181,27 @@ const styles = StyleSheet.create({
     elevation: 4,
     marginBottom: 20,
   },
-  locationCard: {
-    padding: 12,
-    borderRadius: 24,
-    borderWidth: 1,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.15,
-    shadowRadius: 15,
-    elevation: 4,
+  cardHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
   },
   cardTitle: {
     fontSize: 18,
     fontWeight: '700',
   },
-  statusBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 10,
-    alignSelf: 'flex-start',
-    gap: 8,
+  locationBody: {
+    marginTop: 12,
+    minHeight: 40,
+    justifyContent: 'center',
   },
-  dot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-  },
-  statusText: {
-    fontSize: 14,
+  cityText: {
+    fontSize: 16,
     fontWeight: '600',
+  },
+  regionText: {
+    fontSize: 14,
+    marginTop: 2,
   },
   footer: {
     paddingBottom: 20,
