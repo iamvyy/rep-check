@@ -13,6 +13,7 @@ export default function MainLayout() {
       }}
     >
       <Stack.Screen name="home" />
+      <Stack.Screen name="workout" />
     </Stack>
   );
 }

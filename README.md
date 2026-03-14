@@ -1,50 +1,50 @@
-# Welcome to your Expo app 👋
+# Rep Check - Workout Log Assessment
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Rep Check is a simple React Native assessment application designed to demonstrate frontend implementation skills, state management, and form validation. 
 
-## Get started
+## Features
 
-1. Install dependencies
+- **Authentication Flow:** Secure login flow with global state management.
+- **Workout Logging:** Track your daily exercises with details like name, weight, and reps.
+- **Form Validation:** Robust error handling and type coercion utilizing Zod & React Hook Form.
+- **Location Services:** Fallback-ready location fetching mechanism to display your current workout region.
+- **Exercise Library:** Infinite-scroll library of available exercises and their target muscles.
+- **Theming:** Full dark mode/light mode support using styled context and AsyncStorage.
 
-   ```bash
-   npm install
-   ```
+## Getting Started
 
-2. Start the app
+To test out the application, you must use the following test account credentials as backend registration is not wired up for this assessment:
 
-   ```bash
-   npx expo start
-   ```
+**Email:** `py@test.com`
+**Password:** `password123`
 
-In the output, you'll find options to open the app in a
+### Prerequisites
+- Node.js
+- Expo CLI
+- iOS Simulator or Android Emulator
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+### Installation
+1. Clone the repository.
+2. Run `npm install` to fetch dependencies.
+3. Run `npx expo start` to launch the Metro bundler.
+4. Press `i` for iOS or `a` for Android to open the app.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Technologies Used
 
-## Get a fresh project
+- React Native & Expo
+- React Hook Form
+- Zod (Validation)
+- Zustand (State Management)
+- TanStack Query (Data Fetching / Infinite Scroll)
+- UI: React Native Reanimated & Gesture Handler
 
-When you're ready, run:
+## Known Limitations & Areas for Improvement (Unable to deliver due to time constraints)
 
-```bash
-npm run reset-project
-```
+While the core functionality is built, there are several areas that could be enhanced in a production environment:
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+1. **Backend Integration:** Currently, workouts are saved locally in a Zustand store. Implementing a real backend (e.g., Supabase, Firebase, or a custom Node.js server) is required for persistent, cross-device data.
+2. **Local Storage Persistence:** The Zustand workout store does not currently use a persistence middleware (like MMKV or AsyncStorage), meaning logs clear on app reload. 
+3. **Advanced Filtering:** The Exercise Library is an infinite list. Adding a search bar or filter tags (by muscle group or equipment) would significantly improve the UX.
+4. **Workout History & Analytics:** A calendar view or chart screen to visualize progress over time (e.g., seeing bench press weight progress over months) would add massive value to the user.
+5. **Form Real-Time Validation UX:** React Hook Form currently validates on submission. Adding `mode: 'onChange'` or `mode: 'onTouched'` would provide instant feedback to the user before they hit the save button.
+6. **Error Boundaries:** Adding React Error Boundaries around the main navigation stacks would ensure the app catches any unexpected rendering errors gracefully without crashing the entire app.

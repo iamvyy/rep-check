@@ -1,7 +1,15 @@
 import { z } from 'zod';
 
 export const WorkoutLogSchema = z.object({
-  name: z.string().trim().min(1, { error: 'Exercise name is required' }),
+  name: z
+    .string({
+      error: (issue) =>
+        issue.code === 'invalid_type'
+          ? 'Must be a valid title'
+          : 'Invalid title',
+    })
+    .trim()
+    .min(1, { error: 'Exercise name is required' }),
   weight: z.coerce
     .number({
       error: (issue) =>

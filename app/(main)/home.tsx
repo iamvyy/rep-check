@@ -15,12 +15,13 @@ import { useAuthStore } from '@/features/auth/store/auth-store';
 import CurrentLocationCard from '@/features/location/component/current-location-card';
 import { useTheme } from '@/features/theme/hooks/use-theme';
 import WorkoutLog from '@/features/workout/components/workout-log';
+import { useRouter } from 'expo-router';
 
 export default function HomeScreen() {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const router = useRouter();
 
   const { colors, isDark, toggleMode } = useTheme();
-
   const user = useAuthStore((s) => s.user);
   const logout = useAuthStore((s) => s.logout);
 
@@ -71,6 +72,46 @@ export default function HomeScreen() {
         </View>
 
         <CurrentLocationCard />
+
+        <View style={styles.navSection}>
+          <Pressable
+            onPress={() => router.push('/workout')}
+            style={({ pressed }) => [
+              styles.navButton,
+              {
+                backgroundColor: colors.surfaceSecondary,
+                borderColor: colors.borderSubtle,
+              },
+              pressed && { opacity: 0.8 },
+            ]}
+          >
+            <View style={styles.navButtonContent}>
+              <View
+                style={[
+                  styles.iconBox,
+                  { backgroundColor: `${colors.accent}15` },
+                ]}
+              >
+                <Ionicons name="barbell" size={24} color={colors.accent} />
+              </View>
+              <View style={styles.navTextContainer}>
+                <Text style={[styles.navTitle, { color: colors.textPrimary }]}>
+                  Exercise Library
+                </Text>
+                <Text
+                  style={[styles.navSubtitle, { color: colors.textSecondary }]}
+                >
+                  Browse available exercises
+                </Text>
+              </View>
+              <Ionicons
+                name="chevron-forward"
+                size={20}
+                color={colors.textSecondary}
+              />
+            </View>
+          </Pressable>
+        </View>
 
         <WorkoutLog />
 
@@ -137,6 +178,37 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  navSection: {
+    marginBottom: 20,
+  },
+  navButton: {
+    borderRadius: 20,
+    borderWidth: 1,
+    padding: 16,
+  },
+  navButtonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  iconBox: {
+    width: 48,
+    height: 48,
+    borderRadius: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16,
+  },
+  navTextContainer: {
+    flex: 1,
+  },
+  navTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    marginBottom: 4,
+  },
+  navSubtitle: {
+    fontSize: 14,
   },
   footer: {
     paddingBottom: 20,
