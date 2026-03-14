@@ -38,60 +38,58 @@ export default function CurrentLocationCard() {
   };
 
   return (
-    <View style={styles.content}>
-      <View style={styles.statsCard}>
-        <View style={styles.cardHeader}>
-          <Ionicons
-            name={isPermissionDenied ? 'warning' : 'location'}
-            size={20}
-            color={isPermissionDenied ? colors.warning : colors.accent}
-          />
-          <Text style={styles.cardTitle}>
-            {isPermissionDenied ? 'Action Required' : 'Current Location'}
-          </Text>
-        </View>
+    <View style={styles.statsCard}>
+      <View style={styles.cardHeader}>
+        <Ionicons
+          name={isPermissionDenied ? 'warning' : 'location'}
+          size={20}
+          color={isPermissionDenied ? colors.warning : colors.accent}
+        />
+        <Text style={styles.cardTitle}>
+          {isPermissionDenied ? 'Action Required' : 'Current Location'}
+        </Text>
+      </View>
 
-        <View style={styles.locationBody}>
-          {locationLoading ? (
-            <ActivityIndicator size="small" color={colors.accent} />
-          ) : isPermissionDenied || errorCode ? (
-            <View style={styles.errorContainer}>
-              <Text style={styles.errorText}>
-                {isPermissionDenied
-                  ? 'Location access is required to proceed using this app.'
-                  : 'An error occurred while fetching your location.'}
+      <View style={styles.locationBody}>
+        {locationLoading ? (
+          <ActivityIndicator size="small" color={colors.accent} />
+        ) : isPermissionDenied || errorCode ? (
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorText}>
+              {isPermissionDenied
+                ? 'Location access is required to proceed using this app.'
+                : 'An error occurred while fetching your location.'}
+            </Text>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityHint={
+                errorCode === LocationError.PERMISSION_PERMANENTLY_DENIED
+                  ? 'Opens settings to enable location access'
+                  : 'Retries requesting location access'
+              }
+              onPress={handleLocationRetry}
+              style={styles.retryButton}
+            >
+              <Text style={styles.retryText}>
+                {errorCode === LocationError.PERMISSION_PERMANENTLY_DENIED
+                  ? 'Open Settings'
+                  : 'Enable Location'}
               </Text>
-              <Pressable
-                accessibilityRole="button"
-                accessibilityHint={
-                  errorCode === LocationError.PERMISSION_PERMANENTLY_DENIED
-                    ? 'Opens settings to enable location access'
-                    : 'Retries requesting location access'
-                }
-                onPress={handleLocationRetry}
-                style={styles.retryButton}
-              >
-                <Text style={styles.retryText}>
-                  {errorCode === LocationError.PERMISSION_PERMANENTLY_DENIED
-                    ? 'Open Settings'
-                    : 'Enable Location'}
-                </Text>
-              </Pressable>
-            </View>
-          ) : !coords ? (
-            <ActivityIndicator size="small" color={colors.accent} />
-          ) : (
-            <>
-              <Text style={styles.cityText}>
-                {address?.city ?? 'Detecting Location...'}
-              </Text>
-              <Text style={styles.regionText}>
-                {address?.region ? `${address.region}, ` : ''}
-                {address?.country ?? 'Global'}
-              </Text>
-            </>
-          )}
-        </View>
+            </Pressable>
+          </View>
+        ) : !coords ? (
+          <ActivityIndicator size="small" color={colors.accent} />
+        ) : (
+          <>
+            <Text style={styles.cityText}>
+              {address?.city ?? 'Detecting Location...'}
+            </Text>
+            <Text style={styles.regionText}>
+              {address?.region ? `${address.region}, ` : ''}
+              {address?.country ?? 'Global'}
+            </Text>
+          </>
+        )}
       </View>
     </View>
   );
@@ -99,9 +97,6 @@ export default function CurrentLocationCard() {
 
 const createStyles = (colors: any) =>
   StyleSheet.create({
-    content: {
-      flex: 1,
-    },
     statsCard: {
       padding: 24,
       borderRadius: 24,

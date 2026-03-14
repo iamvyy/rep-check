@@ -4,6 +4,7 @@ import {
   ActivityIndicator,
   Alert,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -13,6 +14,7 @@ import { ScreenWrapper } from '@/core/components/screen-wrapper';
 import { useAuthStore } from '@/features/auth/store/auth-store';
 import CurrentLocationCard from '@/features/location/component/current-location-card';
 import { useTheme } from '@/features/theme/hooks/use-theme';
+import WorkoutLog from '@/features/workout/components/workout-log';
 
 export default function HomeScreen() {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -35,7 +37,11 @@ export default function HomeScreen() {
 
   return (
     <ScreenWrapper backgroundColor={colors.background} withKeyboard={false}>
-      <View style={styles.container}>
+      <ScrollView
+        style={styles.container}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+      >
         <View style={styles.header}>
           <View>
             <Text style={[styles.welcomeText, { color: colors.textSecondary }]}>
@@ -66,6 +72,8 @@ export default function HomeScreen() {
 
         <CurrentLocationCard />
 
+        <WorkoutLog />
+
         <View style={styles.footer}>
           <Pressable
             onPress={handleLogout}
@@ -92,7 +100,7 @@ export default function HomeScreen() {
             )}
           </Pressable>
         </View>
-      </View>
+      </ScrollView>
     </ScreenWrapper>
   );
 }
@@ -100,8 +108,12 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
     paddingHorizontal: 24,
     paddingTop: 20,
+    paddingBottom: 40,
   },
   header: {
     flexDirection: 'row',

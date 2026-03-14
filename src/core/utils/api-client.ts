@@ -1,6 +1,6 @@
 import { ApiError } from '@/core/utils/error';
 
-// Suppose to be in an environment variable, not in source code - to be amend ltr
+// Suppose to be in an environment variable, not in source code. but since its a quick mockup ill be leaving it here
 const BASE_URL = 'https://exercisedb.dev/api/v1';
 
 interface RequestOptions extends RequestInit {

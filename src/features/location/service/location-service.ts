@@ -64,32 +64,64 @@ export const getLocationFullData = async (
 
       const lastKnown = await Location.getLastKnownPositionAsync();
 
-      // here can be improved, can check if its balanced first the fallback high ( if location accuracy is bad )
-      const locationPromise = Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.Balanced,
-      });
+      const fetchLocationWithTimeout = (
+        accuracy: Location.Accuracy,
+      ): Promise<Location.LocationObject> => {
+        let timeoutId: ReturnType<typeof setTimeout>;
+        const timeoutPromise = new Promise<never>((_, reject) => {
+          timeoutId = setTimeout(
+            () => reject(new LocationServiceError(LocationError.TIMEOUT)),
+            TIMEOUT_MS,
+          );
+        });
 
-      let timeoutId: ReturnType<typeof setTimeout>;
-      const timeoutPromise = new Promise<never>((_, reject) => {
-        timeoutId = setTimeout(
-          () => reject(new LocationServiceError(LocationError.TIMEOUT)),
-          TIMEOUT_MS,
+        const locationPromise = Location.getCurrentPositionAsync({ accuracy });
+
+        return Promise.race([locationPromise, timeoutPromise]).finally(() =>
+          clearTimeout(timeoutId!),
         );
-      });
+      };
 
-      let coords: Location.LocationObjectCoords;
+      let coords: Location.LocationObjectCoords | null = null;
+      const ACCURACY_THRESHOLD = 100;
 
       try {
-        const location = await Promise.race([locationPromise, timeoutPromise]);
-        coords = location.coords;
+        const balancedLocation = await fetchLocationWithTimeout(
+          Location.Accuracy.Balanced,
+        );
+
+        if (
+          balancedLocation.coords.accuracy &&
+          balancedLocation.coords.accuracy <= ACCURACY_THRESHOLD
+        ) {
+          coords = balancedLocation.coords;
+        } else {
+          const highLocation = await fetchLocationWithTimeout(
+            Location.Accuracy.High,
+          );
+          coords = highLocation.coords;
+        }
       } catch (err) {
+        try {
+          const highLocation = await fetchLocationWithTimeout(
+            Location.Accuracy.High,
+          );
+          coords = highLocation.coords;
+        } catch (innerErr) {
+          if (lastKnown?.coords) {
+            coords = lastKnown.coords;
+          } else {
+            throw innerErr;
+          }
+        }
+      }
+
+      if (!coords) {
         if (lastKnown?.coords) {
           coords = lastKnown.coords;
         } else {
-          throw err;
+          throw new LocationServiceError(LocationError.UNEXPECTED);
         }
-      } finally {
-        clearTimeout(timeoutId!);
       }
 
       let address: Location.LocationGeocodedAddress | null = null;
