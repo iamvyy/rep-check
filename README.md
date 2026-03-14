@@ -50,5 +50,4 @@ While the core functionality is built, there are several areas that could be enh
 5. **Form Real-Time Validation UX:** React Hook Form currently validates on submission. Adding `mode: 'onChange'` or `mode: 'onTouched'` would provide instant feedback to the user before they hit the save button.
 6. **Error Boundaries:** Adding React Error Boundaries around the main navigation stacks would ensure the app catches any unexpected rendering errors gracefully without crashing the entire app.
 
-## Sample demo video :
-<video src="[path/to/video.mp4](https://drive.google.com/file/d/1aRdH0LSsp2O-QOIH3xlgfbDAg8jvef-P/view?usp=sharing)" width="320" height="240" controls></video>
+## Sample demo video : https://drive.google.com/file/d/1aRdH0LSsp2O-QOIH3xlgfbDAg8jvef-P/view?usp=sharing
