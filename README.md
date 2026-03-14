@@ -10,6 +10,7 @@ Rep Check is a simple React Native assessment application designed to demonstrat
 - **Location Services:** Fallback-ready location fetching mechanism to display your current workout region.
 - **Exercise Library:** Infinite-scroll library of available exercises and their target muscles.
 - **Theming:** Full dark mode/light mode support using styled context and AsyncStorage.
+- **Testing:** Short test for mmkv (core/storage)
 
 ## Getting Started
 
