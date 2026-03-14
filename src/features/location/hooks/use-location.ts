@@ -1,66 +1,23 @@
 import { useLocationStore } from '@/features/location/store/location-store';
-import * as Location from 'expo-location';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 
 export const useLocation = () => {
-  const { coords, address, setCoords, setAddress, setError } =
-    useLocationStore();
-  const [loading, setLoading] = useState(false);
-
-  const requestLocation = useCallback(async () => {
-    if (loading) return;
-
-    try {
-      setLoading(true);
-      setError(null);
-
-      const { status: existingStatus } =
-        await Location.getForegroundPermissionsAsync();
-
-      let finalStatus = existingStatus;
-
-      if (existingStatus !== 'granted') {
-        const { status: requestedStatus } =
-          await Location.requestForegroundPermissionsAsync();
-        finalStatus = requestedStatus;
-      }
-
-      if (finalStatus !== 'granted') {
-        setError('Permission to access location was denied');
-        return;
-      }
-
-      const location = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.Balanced,
-      });
-
-      setCoords(location.coords);
-
-      try {
-        const reverse = await Location.reverseGeocodeAsync({
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-        });
-
-        if (reverse && reverse.length > 0) {
-          setAddress(reverse[0]);
-        }
-      } catch (geocodeError) {
-        if (__DEV__) {
-          console.warn('[Location Feature] Geocoding failed:', geocodeError);
-        }
-      }
-    } catch (e: any) {
-      setError(
-        e.message || 'An unexpected error occurred while fetching location',
-      );
-    } finally {
-      setLoading(false);
-    }
-  }, [setCoords, setAddress, setError, loading]);
+  const { coords, address, errorCode, loading, requestLocation } =
+    useLocationStore(
+      useShallow((s) => ({
+        coords: s.coords,
+        address: s.address,
+        errorCode: s.errorCode,
+        loading: s.loading,
+        requestLocation: s.requestLocation,
+      })),
+    );
+  const hasAttemptedInitialFetch = useRef(false);
 
   useEffect(() => {
-    if (!coords) {
+    if (!coords && !hasAttemptedInitialFetch.current) {
+      hasAttemptedInitialFetch.current = true;
       requestLocation();
     }
   }, [coords, requestLocation]);
@@ -68,7 +25,8 @@ export const useLocation = () => {
   return {
     coords,
     address,
-    requestLocation,
+    errorCode,
     loading,
+    requestLocation,
   };
 };

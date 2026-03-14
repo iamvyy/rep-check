@@ -11,13 +11,12 @@ import {
 
 import { ScreenWrapper } from '@/core/components/screen-wrapper';
 import { useAuthStore } from '@/features/auth/store/auth-store';
-import { useLocation } from '@/features/location/hooks/use-location';
+import CurrentLocationCard from '@/features/location/component/current-location-card';
 import { useTheme } from '@/features/theme/hooks/use-theme';
 
 export default function HomeScreen() {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  const { coords, address, loading: locationLoading } = useLocation();
   const { colors, isDark, toggleMode } = useTheme();
 
   const user = useAuthStore((s) => s.user);
@@ -65,48 +64,7 @@ export default function HomeScreen() {
           </Pressable>
         </View>
 
-        <View style={styles.content}>
-          <View
-            style={[
-              styles.statsCard,
-              {
-                backgroundColor: colors.surfaceSecondary,
-                borderColor: colors.borderSubtle,
-              },
-            ]}
-          >
-            <View style={styles.cardHeader}>
-              <Ionicons name="location" size={20} color={colors.accent} />
-              <Text style={[styles.cardTitle, { color: colors.textPrimary }]}>
-                Current Location
-              </Text>
-            </View>
-
-            <View style={styles.locationBody}>
-              {locationLoading ? (
-                <ActivityIndicator size="small" color={colors.accent} />
-              ) : !coords ? (
-                <Text style={{ color: colors.warning, fontSize: 14 }}>
-                  Unable to Detect Location
-                </Text>
-              ) : (
-                <>
-                  <Text
-                    style={[styles.cityText, { color: colors.textPrimary }]}
-                  >
-                    {address?.city ?? 'Detecting Location...'}
-                  </Text>
-                  <Text
-                    style={[styles.regionText, { color: colors.textSecondary }]}
-                  >
-                    {address?.region ? `${address.region}, ` : ''}
-                    {address?.country ?? 'Global'}
-                  </Text>
-                </>
-              )}
-            </View>
-          </View>
-        </View>
+        <CurrentLocationCard />
 
         <View style={styles.footer}>
           <Pressable
@@ -167,41 +125,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  content: {
-    flex: 1,
-  },
-  statsCard: {
-    padding: 24,
-    borderRadius: 24,
-    borderWidth: 1,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.15,
-    shadowRadius: 15,
-    elevation: 4,
-    marginBottom: 20,
-  },
-  cardHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  cardTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-  },
-  locationBody: {
-    marginTop: 12,
-    minHeight: 40,
-    justifyContent: 'center',
-  },
-  cityText: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  regionText: {
-    fontSize: 14,
-    marginTop: 2,
   },
   footer: {
     paddingBottom: 20,
