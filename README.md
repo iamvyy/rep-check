@@ -9,7 +9,7 @@ Rep Check is a simple React Native assessment application designed to demonstrat
 - **Form Validation:** Robust error handling and type coercion utilizing Zod & React Hook Form.
 - **Location Services:** Fallback-ready location fetching mechanism to display your current workout region.
 - **Exercise Library:** Infinite-scroll library of available exercises and their target muscles.
-- **Theming:** Full dark mode/light mode support using styled context and AsyncStorage.
+- **Theming:** Full dark mode/light mode support using styled context and mmkv.
 - **Testing:** Short test for mmkv (core/storage)
 
 ## Getting Started
@@ -49,3 +49,6 @@ While the core functionality is built, there are several areas that could be enh
 4. **Workout History & Analytics:** A calendar view or chart screen to visualize progress over time (e.g., seeing bench press weight progress over months) would add massive value to the user.
 5. **Form Real-Time Validation UX:** React Hook Form currently validates on submission. Adding `mode: 'onChange'` or `mode: 'onTouched'` would provide instant feedback to the user before they hit the save button.
 6. **Error Boundaries:** Adding React Error Boundaries around the main navigation stacks would ensure the app catches any unexpected rendering errors gracefully without crashing the entire app.
+
+## Sample demo video :
+<video src="[path/to/video.mp4](https://drive.google.com/file/d/1aRdH0LSsp2O-QOIH3xlgfbDAg8jvef-P/view?usp=sharing)" width="320" height="240" controls></video>
