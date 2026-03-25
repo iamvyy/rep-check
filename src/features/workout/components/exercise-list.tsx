@@ -71,7 +71,9 @@ export const ExerciseList = () => {
     return (
       <View style={styles.centered}>
         <ActivityIndicator size="large" color={colors.textPrimary} />
-        <Text style={{ color: colors.textSecondary }}>Loading Exercises...</Text>
+        <Text style={{ color: colors.textSecondary }}>
+          Loading Exercises...
+        </Text>
       </View>
     );
   }
@@ -84,7 +86,7 @@ export const ExerciseList = () => {
       onRefresh={refetch}
       refreshing={isRefetching && !isFetchingNextPage}
       onEndReached={() => {
-        if (hasNextPage && !isFetchingNextPage) {
+        if (hasNextPage && !isFetchingNextPage && !isRefetching) {
           fetchNextPage();
         }
       }}

@@ -1,5 +1,5 @@
 import { ApiResponse } from '@/core/types/api';
-import { apiClient } from '@/core/utils/api-client';
+import exerciseDbClient from '@/core/utils/api-client';
 import { Exercise } from '@/features/workout/types/exercise';
 
 export type ExerciseFilters = {
@@ -14,9 +14,11 @@ export const exerciseApi = {
       ? `/exercises/bodyPart/${filters.bodyPart}`
       : '/exercises';
 
-    const response = await apiClient<ApiResponse<Exercise[]>>(path, {
+    const response = await exerciseDbClient<ApiResponse<Exercise[]>>(path, {
       params: filters,
       signal,
+      retries: 2,
+      timeoutMs: 5000,
     });
 
     return response;

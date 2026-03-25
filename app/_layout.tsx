@@ -6,10 +6,12 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { GlobalErrorFallback } from '@/core/components/global-error-fallback';
 import { useAppStateFocus } from '@/core/hooks/use-app-state-focus';
 import { useOnlineManager } from '@/core/hooks/use-online-manager';
 import { queryClient } from '@/core/lib/react-query';
 import { useAuthStore } from '@/features/auth/store/auth-store';
+import { ErrorBoundary } from 'react-error-boundary';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -35,13 +37,18 @@ export default function RootLayout() {
 
   return (
     <SafeAreaProvider>
-      <QueryClientProvider client={queryClient}>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <Animated.View entering={FadeIn.duration(400)} style={{ flex: 1 }}>
-            <Slot />
-          </Animated.View>
-        </GestureHandlerRootView>
-      </QueryClientProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <QueryClientProvider client={queryClient}>
+          <ErrorBoundary
+            FallbackComponent={GlobalErrorFallback}
+            onReset={() => queryClient.resetQueries()}
+          >
+            <Animated.View entering={FadeIn.duration(400)} style={{ flex: 1 }}>
+              <Slot />
+            </Animated.View>
+          </ErrorBoundary>
+        </QueryClientProvider>
+      </GestureHandlerRootView>
     </SafeAreaProvider>
   );
 }
