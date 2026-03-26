@@ -2,7 +2,6 @@ import { useLocation } from '@/features/location/hooks/use-location';
 import { LocationError } from '@/features/location/service/location-service';
 import { useTheme } from '@/features/theme/hooks/use-theme';
 import { Ionicons } from '@expo/vector-icons';
-import { useMemo } from 'react';
 import {
   ActivityIndicator,
   Linking,
@@ -15,7 +14,7 @@ import {
 export default function CurrentLocationCard() {
   const { colors } = useTheme();
 
-  const styles = useMemo(() => createStyles(colors), [colors]);
+  const styles = createStyles(colors);
 
   const {
     coords,

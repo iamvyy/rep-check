@@ -8,7 +8,7 @@ import {
 import { useWorkoutStore } from '@/features/workout/store/workout-store';
 import { Ionicons } from '@expo/vector-icons';
 import { zodResolver } from '@hookform/resolvers/zod';
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 
@@ -24,7 +24,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export default function WorkoutLog() {
   const { colors } = useTheme();
-  const styles = useMemo(() => createStyles(colors), [colors]);
+  const styles = createStyles(colors);
 
   const [showWorkoutLogForm, setShowWorkoutLogForm] = useState(false);
   const { workouts, isLogging, logWorkout, deleteWorkout } = useWorkoutStore();
