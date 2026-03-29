@@ -108,6 +108,7 @@ export const LoginForm = () => {
             />
           )}
         />
+
         {errors.password && (
           <Text style={[styles.errorText, { color: colors.warning }]}>
             {errors.password.message}

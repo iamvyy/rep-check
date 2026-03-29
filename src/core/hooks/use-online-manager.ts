@@ -1,26 +1,23 @@
+import NetInfo from '@react-native-community/netinfo';
 import { onlineManager } from '@tanstack/react-query';
-import * as Network from 'expo-network';
 import { useEffect } from 'react';
 import { Platform } from 'react-native';
 
 export function useOnlineManager() {
   useEffect(() => {
-    if (Platform.OS !== 'web') {
-      return onlineManager.setEventListener((setOnline) => {
-        let subscription: { remove: () => void } | undefined;
+    if (Platform.OS === 'web') return;
 
-        Network.getNetworkStateAsync().then((state) => {
-          setOnline(!!state.isConnected);
-        });
+    onlineManager.setOnline(true);
 
-        subscription = Network.addNetworkStateListener((state) => {
-          setOnline(!!state.isConnected);
-        });
+    const unsubscribe = NetInfo.addEventListener((state) => {
+      const isOnline =
+        state.isConnected != null && state.isInternetReachable != null
+          ? state.isConnected && state.isInternetReachable
+          : true;
 
-        return () => {
-          subscription?.remove();
-        };
-      });
-    }
+      onlineManager.setOnline(isOnline);
+    });
+
+    return () => unsubscribe();
   }, []);
 }

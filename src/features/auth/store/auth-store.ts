@@ -1,5 +1,8 @@
 import { storage } from '@/core/storage/mmkv-storage';
-import { mockLoginApi, mockLogoutApi } from '@/features/auth/api/mock-login-logout';
+import {
+  mockLoginApi,
+  mockLogoutApi,
+} from '@/features/auth/api/mock-login-logout';
 import User from '@/features/auth/interfaces/user';
 import { LoginFormData } from '@/features/auth/schemas/login-schema';
 import { create } from 'zustand';
