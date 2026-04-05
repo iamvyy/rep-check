@@ -27,8 +27,8 @@ To test out the application, you must use the following test account credentials
 ### Installation
 1. Clone the repository.
 2. Run `npm install` to fetch dependencies.
-3. Run `npx expo start` to launch the Metro bundler.
-4. Press `i` for iOS or `a` for Android to open the app.
+3. Run `npx expo prebuild` to build.
+4. Run `npx expo run:ios` or `npx expo run:android` to run the app .
 
 ## Technologies Used
 
